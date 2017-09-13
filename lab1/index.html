@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple markers</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+
+    function initMap() {
+
+        var myCities = [
+            {
+                Name : "Letichev",
+                position : {
+                    lat: 49.387582, lng: 27.621436
+                }
+            },
+            {
+                Name : "Vinnitsya",
+                position : {
+                    lat: 49.229516, lng: 28.419680
+                }
+            },
+            {
+                Name : "Vatutino",
+                position : {
+                    lat: 49.010547, lng: 31.044713
+                }
+            }
+        ];
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: myCities[1].position
+        });
+
+        myCities.forEach(function (item,i,myCities) {
+            drawMarkers(item);
+        });
+
+        function drawMarkers(city) {
+            var url = "https://api.openweathermap.org/data/2.5/weather?lat=" + city.position.lat + "&lon=" + city.position.lng + "&appid=1b5ee5a1a74d624a74750350327ea372";
+            fetch(url)
+                .then(function(response) {
+                    response.json()
+                        .then(function(data) {
+                        var marker = new google.maps.Marker({
+                            position: city.position,
+                            map: map,
+                            title: city.Name,
+                            icon: 'http://openweathermap.org/img/w/'+data.weather[0]['icon']+'.png'
+                        });
+
+                    });
+                });
+        }
+
+        fetch("https://www.bestname.ua/bnapp/app.php?page=api&action=getUserDomainsByEmail&email=3kn15b.gavryshchuk@gmail.com")
+            .then(function (response) {
+                response.json()
+                    .then(function (data) {
+                        console.log(data);
+                    })
+            })
+
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl_3tnjH0v0KLfJNbith4fXL_Y2kQeGWk&callback=initMap">
+</script>
+</body>
+</html>
