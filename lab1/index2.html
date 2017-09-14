@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search images on Nasa</title>
+</head>
+
+<script>
+
+    function search() {
+        var query = document.getElementById("query").value;
+        var imagesDiv = document.getElementById("images");
+
+
+        var preset = "";
+
+        fetch("https://images-api.nasa.gov/search?q=" + query + "&media_type=image",
+            {
+                method: 'GET',
+                mode: 'cors'
+            }
+        )
+            .then(function (response) {
+                response.json()
+                    .then(function (data) {
+
+                        var ItemsArray = data.collection.items;
+                        ItemsArray.forEach(function (item, i, ItemsArray) {
+                            preset+="<img style='height: 100px' src='" + item.links[0].href + "'>";
+                        });
+
+                        imagesDiv.innerHTML = preset;
+                    })
+            })
+    }
+
+</script>
+<body>
+
+<label><input type="text" id="query">Enter the search parametrs</label>
+<button onClick="search()">GO</button>
+<div id="images"></div>
+</body>
+</html>
